@@ -1,0 +1,149 @@
+﻿@{
+    ViewData["Title"] = "Thống kê";
+}
+
+
+<div class="form-group">
+     <label  class="control-label">Tên tour</label>
+     <select id="matour"  asp-items="ViewBag.tourList">
+     </select>
+</div>
+<div class="form-group">
+     <input id="ngaybatdau" type="datetime-local" class="form-control" disabled/>
+</div>
+<div class="form-group">
+     <input id="ngaykeythuc" type="datetime-local" class="form-control" disabled/>
+</div>
+<div class="form-group">
+     <input type="button" id="submit" value="Thống kê" class="btn btn-primary" />
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class ="card">
+            <div class="card-header">
+               Chi phí
+            </div>
+            <div class="card-body">
+                <canvas class="my-4 h-25" id="bar"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class ="card">
+            <div class="card-header">
+                Chi phí
+            </div>
+            <div class="card-body">
+                <canvas class="my-4 h-25" id="pie"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js"  ></script>
+<script type="text/javascript">
+        $(document).ready(function(){
+            $('#matour').change(function(e){
+                $.post('/thongke/ajaxGetNgay',{MaTour : e.target.value},function(data){
+                    if(data.length > 0){
+                        console.log( data[0].thoiGianBatDau,data[0].thoiGianKetThuc);
+                        document.getElementById('ngaybatdau').value = data[0].thoiGianBatDau  ;
+                        document.getElementById('ngaykeythuc').value = data[0].thoiGianKetThuc ;
+                        document.getElementById('ngaybatdau').removeAttribute("disabled")  ;
+                        document.getElementById('ngaykeythuc').removeAttribute("disabled");
+                    }else{
+                        console.log("abc")
+                        document.getElementById('ngaybatdau').value = "" ;
+                        document.getElementById('ngaykeythuc').value =  "";
+                    }
+                    ;
+                });
+            });
+             $('#submit').click(function(e){
+                 if($("#ngaybatdau").val()!="" && $("#ngaykeythuc").val()!=""){
+                     $.get('/thongke/TKChiPhi',{MaTour :$('#matour').val(),ThoiGianBatDau: $("#ngaybatdau").val(),ThoiGianKetThuc : $("#ngaykeythuc").val()},function(data){
+                        if(data.length > 0){
+                            console.log(data);
+                            getThongKe(data);
+                        }else{
+                            alert("Chưa có dữ liệu thống kê vui lòng kiểm tra lại")
+                        }
+                      });
+                 }else{
+                        alert("Chưa có dữ liệu thống kê vui lòng kiểm tra lại")
+                 }
+             })
+        });
+
+        var mybarhart = null;
+        var mypieChart = null;
+
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF'.split('');
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function getRandomColorEachEmployee(count) {
+            var data =[];
+            for (var i = 0; i < count; i++) {
+                data.push(getRandomColor());
+            }
+            return data;
+        }
+        
+        function getThongKe(data){
+            var lables = [];
+            var datas =[];
+            $.each(data,function(index,item){
+                lables.push(item.chiPhi.tenChiPhi);
+                datas.push(item.tongTien);
+            })
+
+            console.log(lables);
+            console.log(datas);
+            if(mybarhart != null){
+                mybarhart.destroy();
+            }
+            var barchart = document.getElementById('bar').getContext('2d');
+            var barchartdata = {
+                    labels: lables,
+                    datasets: [{
+                        label: 'Thống kê chi phí',
+                        data: datas,
+                        backgroundColor: getRandomColorEachEmployee(lables.length),
+
+                    }]
+                }
+            mybarhart = new Chart(barchart,{
+                type : 'bar',
+                data:barchartdata,
+            })
+           
+
+            if(mypieChart != null){
+                mypieChart.destroy();
+            }
+            var piechart = document.getElementById('pie').getContext('2d');
+            mypieChart = new Chart(piechart,{
+                type : 'pie',
+                data:{
+                    labels: lables,
+                    datasets: [{
+                        label: 'Bar chart',
+                        data: datas,
+                         backgroundColor: getRandomColorEachEmployee(lables.length),
+
+                    }]
+                }
+            })
+        }
+   
+</script>
+}
