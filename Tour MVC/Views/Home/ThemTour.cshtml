@@ -1,0 +1,41 @@
+﻿@model QuanLyTour.Models.Tour
+
+<h4>Tour</h4>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ThemTour" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TenTour" class="control-label">Tên tour</label>
+                <input asp-for="TenTour" class="form-control" />
+                <span asp-validation-for="TenTour" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DacDiem" class="control-label">Đặc điểm</label>
+                <input asp-for="DacDiem" class="form-control" />
+                <span asp-validation-for="DacDiem" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaLoaiHinh" class="control-label">Tên loại hình</label>
+                <select asp-for="MaLoaiHinh" asp-items="ViewBag.TenLoaiHinhList">
+                </select>
+                <span asp-validation-for="MaLoaiHinh" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" id="submit" value="Thêm" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Danh sách tour</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+

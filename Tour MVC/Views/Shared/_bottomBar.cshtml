@@ -1,0 +1,15 @@
+﻿@model PageModel
+
+<div class="container m-0 p-0 btn-group" style="background-color:black;border-radius:10px;height:45px;color:white;">
+    <div class="col-4 btn-group p-1 m-1">
+        <p>
+            Showing @Model.StartRecord to @Model.EndRecord of @Model.TotalItems Rows
+        </p>
+    </div>
+
+     <div class="col-4 btn-group justify-content-end mt-2">
+        <p>
+            Showing @Model.CurrentPage/ @Model.TotalPages pages
+        </p>
+    </div>
+</div>

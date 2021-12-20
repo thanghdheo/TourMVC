@@ -1,0 +1,34 @@
+﻿@model QuanLyTour.Models.ChitietCp
+
+<h4>Thêm chi phí</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ThemChiPhi" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input asp-for="MaSoDoan" value="@ViewBag.Id" class="form-control" />
+            <div class="form-group">
+                <label asp-for="MaChiPhi" class="control-label">Tên chi phí</label>
+                <select asp-for="MaChiPhi" asp-items="ViewBag.chiPhiList">
+                </select>
+                <span asp-validation-for="MaChiPhi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TongTien" class="control-label">Tổng tiền</label>
+                <input asp-for="TongTien" class="form-control" />
+                <span asp-validation-for="TongTien" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Thêm" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Danh sách đoàn</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

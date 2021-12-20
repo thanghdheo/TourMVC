@@ -1,0 +1,51 @@
+﻿@model QuanLyTour.Models.BangGiaVe
+
+ @if(TempData["Message"] != null)
+    {
+        <div class="alert alert-info ">
+            @TempData["Message"]
+        </div>
+    }
+<h4>Bảng giá vé</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ThemGiaTour" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ThoiGianBatDau" class="control-label">Thời gian bắt đầu</label>
+                <input type="datetime-local" asp-for="ThoiGianBatDau" class="control-label">
+                <span asp-validation-for="ThoiGianBatDau" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ThoiGianKetThuc" class="control-label">Thời gian kết thúc</label>
+                <input type="datetime-local" asp-for="ThoiGianKetThuc" class="control-label">
+                <span asp-validation-for="ThoiGianKetThuc" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Gia" class="control-label">Giá</label>
+                <input asp-for="Gia" class="form-control" />
+                <span asp-validation-for="Gia" class="text-danger"></span>
+            </div>
+                <input type="hidden" asp-for="MaTour" value="@ViewBag.Id" class="form-control" />
+           
+            <div class="form-group">
+                <input type="submit" value="Thêm" class="btn btn-primary" />
+            </div>
+            @if(ViewBag.error != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @ViewBag.error
+                </div>
+            }
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Danh sách tour</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

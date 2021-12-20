@@ -1,0 +1,102 @@
+﻿@model QuanLyTour.Models.ChiTietDoanKhach
+
+<h4>Chi tiết đoàn khách</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ThemDoan">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="MaKhachHang" class="control-label"></label>
+                <input asp-for="MaKhachHang" value="@ViewBag.Id" class="form-control" />
+                <span asp-validation-for="MaKhachHang" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label  class="control-label">Tên tour</label>
+                <select id="matour" asp-items="ViewBag.TenTourList" >
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaSoDoan"  class="control-label">Đoàn du lịch</label>
+                <select id="madoan" asp-for="MaSoDoan" disabled>
+                </select>
+                <span asp-validation-for="MaSoDoan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Ngày khởi hành</label>
+                <input id="ngaybatdau" type="datetime-local" class="form-control" disabled/>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Ngày kết thúc</label>
+                <input id="ngaykeythuc" type="datetime-local" class="form-control" disabled/>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Giá vé</label>
+                <input id="giave" value ="@ViewBag.giave" class="form-control" disabled/>
+            </div>
+            <div class="form-group">
+                <label asp-for="GhiChú" class="control-label"></label>
+                <input asp-for="GhiChú" class="form-control" />
+                <span asp-validation-for="GhiChú" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Thêm" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Danh sách khách hàng</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function(){
+            $('#matour').change(function(e){
+                $.post('/khachhang/ajaxGetDoan',{MaTour : e.target.value},function(data){
+                    if(data.length > 0){
+                        console.log(data);
+
+                        document.getElementById("madoan").innerHTML = "";
+
+                        data.forEach((value,index) =>{
+                                    console.log(value)
+                                    var opt1 = document.createElement("option");
+                                    opt1.value = value.maSoDoan;
+                                    opt1.text = value.tenDoanDuLich;
+                                    document.getElementById("madoan").add(opt1,null);
+                            }
+                        );
+                        document.getElementById('madoan').removeAttribute("disabled");
+                        document.getElementById("ngaybatdau").value = data[0].ngayKhoiHanh;
+                        document.getElementById("ngaykeythuc").value = data[0].ngayKetThuc;
+                    }else{
+                            document.getElementById("madoan").innerHTML = "";
+                    }
+                    
+                });
+            });
+
+            $('#matour').change(function(e){
+                $.post('/khachhang/ajaxGetGia',{MaTour :e.target.value,ThoiGianBatDau :document.getElementById("ngaybatdau").value,ThoiGianKetThuc : document.getElementById("ngaykeythuc").value},function(data){
+                   document.getElementById("giave").value = data;
+                });
+            });
+
+             $('#madoan').change(function(e){
+                $.post('/khachhang/ajaxGetNgayDoan',{MaDoan :e.target.value},function(data){
+                    document.getElementById("ngaybatdau").value = data[0].ngayKhoiHanh;
+                    document.getElementById("ngaykeythuc").value = data[0].ngayKetThuc;
+                });
+            });
+
+             $('#madoan').change(function(e){
+                $.post('/khachhang/ajaxGetNgayDoanGia',{ThoiGianBatDau :document.getElementById("ngaybatdau").value,ThoiGianKetThuc : document.getElementById("ngaykeythuc").value},function(data){
+                    document.getElementById("giave").value = data;
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,34 @@
+﻿@model QuanLyTour.Models.PhanBo
+
+<h4>PhanBo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ThemPhanBo" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="MaNhanVien" class="control-label">Tên chi phí</label>
+                <select asp-for="MaNhanVien" asp-items="ViewBag.nhanvienList">
+                </select>
+                <span asp-validation-for="MaNhanVien" class="text-danger"></span>
+            </div>
+                <input asp-for="MaSoDoan" type="hidden" value="@ViewBag.Id" class="form-control" />
+            <div class="form-group">
+                <label asp-for="Nhiemvu" class="control-label">Nhiệm vụ</label>
+                <input asp-for="Nhiemvu" class="form-control" />
+                <span asp-validation-for="Nhiemvu" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Thêm" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Danh sách đoàn</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

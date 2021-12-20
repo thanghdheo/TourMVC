@@ -1,0 +1,124 @@
+﻿@model IEnumerable<QuanLyTour.Models.KhachDuLich>
+@{
+    int i = 1;
+    ViewData["Title"] = "Quản lý khách hàng";
+    sortOrder sortOrder = (sortOrder)ViewData["sortModel"];
+    PageModel paper = ViewBag.Paper;
+}
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+ @if(TempData["Message"] != null)
+    {
+        <div class="alert alert-info ">
+            @TempData["Message"]
+        </div>
+    }
+<p>
+    <a class="btn btn-success" asp-action="ThemKhachHang">Thêm khách hàng</a>
+</p>
+<div class="row">
+    <div class="col-12">
+        <partial name ="_topBar" model="@paper"/>
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <i class="@sortOrder.getColumn("stt").sortIcon" aria-hidden="true"></i>
+                <a asp-action="Index" asp-route-sort="@sortOrder.getColumn("stt").sort">
+                    STT
+                </a>
+            </th>
+            <th>
+                <i class="@sortOrder.getColumn("tên khách hàng").sortIcon" aria-hidden="true"></i>
+                <a asp-action="Index" asp-route-sort="@sortOrder.getColumn("tên khách hàng").sort">
+                   Tên khách hàng
+                </a>
+            </th>
+            <th>
+                <i class="@sortOrder.getColumn("cmnd").sortIcon" aria-hidden="true"></i>
+                <a asp-action="Index" asp-route-sort="@sortOrder.getColumn("cmnd").sort">
+                   CMND
+                </a>
+            </th>
+            <th>
+                <i class="@sortOrder.getColumn("địa chỉ").sortIcon" aria-hidden="true"></i>
+                <a asp-action="Index" asp-route-sort="@sortOrder.getColumn("địa chỉ").sort">
+                   Địa chỉ
+                </a>
+            </th>
+            <th>
+                <i class="@sortOrder.getColumn("giới tính").sortIcon" aria-hidden="true"></i>
+                <a asp-action="Index" asp-route-sort="@sortOrder.getColumn("giới tính").sort">
+                   Giới tính
+                </a>
+            </th>
+            <th>
+                <i class="@sortOrder.getColumn("số điện thọai").sortIcon" aria-hidden="true"></i>
+                <a asp-action="Index" asp-route-sort="@sortOrder.getColumn("số điện thọai").sort">
+                     Số điện thọai
+                </a>
+            </th>
+            <th>
+                <i class="@sortOrder.getColumn("quốc tịch").sortIcon" aria-hidden="true"></i>
+                <a asp-action="Index" asp-route-sort="@sortOrder.getColumn("quốc tịch").sort">
+                     Quốc tịch
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @i
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TenKhachHang)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cmnd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DiaChi)
+            </td> @{
+                        if(item.GioiTinh == true)
+                        {
+                            <td>
+                                Nam
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                Nữ
+                            </td>
+                        }
+                    }
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.Sdt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuocTich)
+            </td>
+            <td>
+               <div class="row">
+                <div class="col-sm">
+                    <a class = "btn btn-info m-2" asp-action="ThemDoan" asp-route-MaKhachHang="@item.MaKhachHang">Thêm đoàn</a>
+                </div>
+                <div class="col-sm ">
+                     <a class = "btn btn-warning m-2" asp-action="SuaKhachHang" asp-route-MaKhachHang="@item.MaKhachHang">Sửa khách hàng</a>
+                </div>
+              </div>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<div class="row">
+    <div class="col-12">
+        <partial name ="_bottomBar" model="@paper"/>
+    </div>
+</div>

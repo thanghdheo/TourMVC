@@ -1,0 +1,34 @@
+﻿@model QuanLyTour.Models.ChiTietDoanKhach
+
+<h4>ChiTietDoanKhach</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="SuaKhachHang" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input asp-for="MaKhachHang" type="hidden" class="form-control" />
+                <input asp-for="MaSoDoan" type="hidden" class="form-control" />
+            <div class="form-group">
+                <label asp-for="MaKhachHangNavigation.TenKhachHang" class="control-label">Tên khách hàng</label>
+                <input asp-for="MaKhachHangNavigation.TenKhachHang" class="form-control" disabled/>
+                <span asp-validation-for="MaKhachHangNavigation.TenKhachHang" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GhiChú" class="control-label">Ghi chú</label>
+                <input asp-for="GhiChú" class="form-control" />
+                <span asp-validation-for="GhiChú" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Danh sách đoàn</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

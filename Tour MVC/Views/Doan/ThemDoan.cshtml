@@ -1,0 +1,98 @@
+﻿@model QuanLyTour.Models.DoanDuLich
+
+<h4>DoanDuLich</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ThemDoan" name="form" method="post" onsubmit="return required()">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="MaTour" class="control-label">Tên tour</label>
+                <select id="matour" asp-for="MaTour" asp-items="ViewBag.TenTourList" >
+                </select>
+                <span asp-validation-for="MaTour" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TenDoanDuLich" class="control-label">Tên đoàn du lịch</label>
+                <input  id="Name" asp-for="TenDoanDuLich" class="form-control" />
+                <span asp-validation-for="TenDoanDuLich" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NgayKhoiHanh" class="control-label">Ngày khởi hành</label>
+                <input id="ngaybatdau" type="datetime-local" asp-for="NgayKhoiHanh" class="form-control" disabled/>
+                <span asp-validation-for="NgayKhoiHanh" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NgayKetThuc" class="control-label">Ngày kết thúc</label>
+                <input id="ngaykeythuc" type="datetime-local" asp-for="NgayKetThuc" class="form-control" disabled/>
+                <span asp-validation-for="NgayKetThuc" class="text-danger"></span>
+            </div>
+             <div class="form-group">
+                <label  class="control-label">Giá vé</label>
+                <input name="giave" placeholder="Thời gian này chưa có giá vé" id="giave" class="form-control" disabled />
+                <span  class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ChiTietChuongTrinh" class="control-label">Chi tiết chương trình</label>
+                <input asp-for="ChiTietChuongTrinh" class="form-control" />
+                <span asp-validation-for="ChiTietChuongTrinh" class="text-danger"></span>
+            </div>
+            <input asp-for="DoanhThu" type="hidden" value="0" class="form-control" />
+            <div class="form-group">
+                <input id="submit" type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Danh sách đoàn</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function(){
+            $('#matour').change(function(e){
+                $.post('/doan/ajaxGetGiaVe',{MaTour : e.target.value},function(data){
+                    if(data.length > 0){
+                        console.log( data[0].gia,data[0].thoiGianBatDau,data[0].thoiGianKetThuc);
+                        document.getElementById('giave').value =  data[0].gia ;
+                        document.getElementById('ngaybatdau').value = data[0].thoiGianBatDau  ;
+                        document.getElementById('ngaykeythuc').value = data[0].thoiGianKetThuc ;
+                        document.getElementById('ngaybatdau').removeAttribute("disabled")  ;
+                        document.getElementById('ngaykeythuc').removeAttribute("disabled");
+                    }else{
+                        console.log("abc")
+                        document.getElementById('giave').value ="";
+                        document.getElementById('ngaybatdau').value = "" ;
+                        document.getElementById('ngaykeythuc').value =  "";
+                    }
+                    ;
+                });
+            });
+            $('#ngaybatdau').change(function(e){
+                $.post('/doan/ajaxKiemTraNgayBatDau',{MaTour :document.getElementById('matour').value,ThoiGianBatDau: e.target.value,ThoiGianKetThuc : document.getElementById("ngaykeythuc").value},function(data){
+                    console.log(data);
+                    document.getElementById('giave').value =data;
+                });
+            });
+             $('#ngaykeythuc').change(function(e){
+                $.post('/doan/ajaxKiemTraNgayKetThuc',{MaTour :document.getElementById('matour').value,ThoiGianKetThuc: e.target.value,ThoiGianBatDau : document.getElementById("ngaybatdau").value},function(data){
+                    console.log(data);
+                    document.getElementById('giave').value =data;
+                });
+            });
+        });
+
+        function required()
+        {
+            var empt = document.forms["form"]["giave"].value;
+            if (empt == "")
+            {
+                alert("Khoảng thời gian này chưa có giá vé");
+                return false;
+            }
+        }
+    </script>
+}
