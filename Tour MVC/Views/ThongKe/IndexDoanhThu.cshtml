@@ -45,26 +45,26 @@
 @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js"  ></script>
 <script type="text/javascript">
-        $(document).ready(function(){
-            $('#matour').change(function(e){
-                $.post('/thongke/ajaxGetNgay',{MaTour : e.target.value},function(data){
+        $(document).ready(() => {
+            $('#matour').change((e) => {
+                $.post('/thongke/ajaxGetNgay',{MaTour : e.target.value},(data) => {
                     if(data.length > 0){
                         console.log( data[0].thoiGianBatDau,data[0].thoiGianKetThuc);
-                        document.getElementById('ngaybatdau').value = data[0].thoiGianBatDau  ;
-                        document.getElementById('ngaykeythuc').value = data[data.length - 1].thoiGianKetThuc ;
-                        document.getElementById('ngaybatdau').removeAttribute("disabled")  ;
-                        document.getElementById('ngaykeythuc').removeAttribute("disabled");
+                        $('#ngaybatdau').val(data[0].thoiGianBatDau ) ;
+                        $('#ngaykeythuc').val(data[data.length - 1].thoiGianKetThuc) ;
+                        $('#ngaybatdau').removeAttr("disabled")  ;
+                        $('#ngaykeythuc').removeAttr("disabled");
                     }else{
                         console.log("abc")
-                        document.getElementById('ngaybatdau').value = "" ;
-                        document.getElementById('ngaykeythuc').value =  "";
+                        $('#ngaybatdau').val("") ;
+                        $('#ngaykeythuc').val("");
                     }
                     ;
                 });
             });
-             $('#submit').click(function(e){
+             $('#submit').click((e) => {
                  if($("#ngaybatdau").val()!="" && $("#ngaykeythuc").val()!=""){
-                     $.get('/thongke/TKDoanhThu',{MaTour :$('#matour').val(),ThoiGianBatDau: $("#ngaybatdau").val(),ThoiGianKetThuc : $("#ngaykeythuc").val()},function(data){
+                     $.get('/thongke/TKDoanhThu',{MaTour :$('#matour').val(),ThoiGianBatDau: $("#ngaybatdau").val(),ThoiGianKetThuc : $("#ngaykeythuc").val()},(data) => {
                         if(data.length > 0){
                             console.log(data);
                             getThongKe(data);
@@ -101,7 +101,7 @@
         function getThongKe(data){
             var lables = [];
             var datas =[];
-            $.each(data,function(index,item){
+            $.each(data,(index,item) => {
                 lables.push(item.tenDoanDuLich);
                 datas.push(item.doanhThu);
             })

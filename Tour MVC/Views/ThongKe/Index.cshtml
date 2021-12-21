@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Thống kê";
+    ViewData["Title"] = "Thống kê chi phí";
 }
 
 
@@ -47,24 +47,24 @@
 <script type="text/javascript">
         $(document).ready(function(){
             $('#matour').change(function(e){
-                $.post('/thongke/ajaxGetNgay',{MaTour : e.target.value},function(data){
+                $.post('/thongke/ajaxGetNgay',{MaTour : e.target.value},(data) => {
                     if(data.length > 0){
                         console.log( data[0].thoiGianBatDau,data[0].thoiGianKetThuc);
-                        document.getElementById('ngaybatdau').value = data[0].thoiGianBatDau  ;
-                        document.getElementById('ngaykeythuc').value = data[0].thoiGianKetThuc ;
-                        document.getElementById('ngaybatdau').removeAttribute("disabled")  ;
-                        document.getElementById('ngaykeythuc').removeAttribute("disabled");
+                        $('#ngaybatdau').val(data[0].thoiGianBatDau)  ;
+                        $('#ngaykeythuc').val(data[0].thoiGianKetThuc) ;
+                        $('#ngaybatdau').removeAttr("disabled")  ;
+                        $('#ngaykeythuc').removeAttr("disabled");
                     }else{
                         console.log("abc")
-                        document.getElementById('ngaybatdau').value = "" ;
-                        document.getElementById('ngaykeythuc').value =  "";
+                        $('#ngaybatdau').val("") ;
+                        $('#ngaykeythuc').val("");
                     }
                     ;
                 });
             });
-             $('#submit').click(function(e){
+             $('#submit').click((e) => {
                  if($("#ngaybatdau").val()!="" && $("#ngaykeythuc").val()!=""){
-                     $.get('/thongke/TKChiPhi',{MaTour :$('#matour').val(),ThoiGianBatDau: $("#ngaybatdau").val(),ThoiGianKetThuc : $("#ngaykeythuc").val()},function(data){
+                     $.get('/thongke/TKChiPhi',{MaTour :$('#matour').val(),ThoiGianBatDau: $("#ngaybatdau").val(),ThoiGianKetThuc : $("#ngaykeythuc").val()},(data) => {
                         if(data.length > 0){
                             console.log(data);
                             getThongKe(data);
@@ -101,7 +101,7 @@
         function getThongKe(data){
             var lables = [];
             var datas =[];
-            $.each(data,function(index,item){
+            $.each(data,(index,item) => {
                 lables.push(item.chiPhi.tenChiPhi);
                 datas.push(item.tongTien);
             })

@@ -79,7 +79,7 @@
         function getThongKe(data){
             var lables = [];
             var datas =[];
-            $.each(data,function(index,item){
+            $.each(data,(index,item) => {
                 lables.push(item.nhanVien.tenNhanVien);
                 datas.push(item.soLan);
             })

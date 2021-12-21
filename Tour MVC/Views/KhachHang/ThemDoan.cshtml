@@ -4,13 +4,9 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="ThemDoan">
+        <form id="form" asp-action="ThemDoan" onsubmit="return required()">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="MaKhachHang" class="control-label"></label>
-                <input asp-for="MaKhachHang" value="@ViewBag.Id" class="form-control" />
-                <span asp-validation-for="MaKhachHang" class="text-danger"></span>
-            </div>
+                <input asp-for="MaKhachHang" type="hidden" value="@ViewBag.Id" class="form-control" />
             <div class="form-group">
                 <label  class="control-label">Tên tour</label>
                 <select id="matour" asp-items="ViewBag.TenTourList" >
@@ -53,13 +49,13 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-        $(document).ready(function(){
-            $('#matour').change(function(e){
-                $.post('/khachhang/ajaxGetDoan',{MaTour : e.target.value},function(data){
+        $(document).ready(() => {
+            $('#matour').change((e) => {
+                $.post('/khachhang/ajaxGetDoan',{MaTour : e.target.value},(data) => {
                     if(data.length > 0){
                         console.log(data);
 
-                        document.getElementById("madoan").innerHTML = "";
+                        $("#madoan").html("");
 
                         data.forEach((value,index) =>{
                                     console.log(value)
@@ -69,34 +65,45 @@
                                     document.getElementById("madoan").add(opt1,null);
                             }
                         );
-                        document.getElementById('madoan').removeAttribute("disabled");
-                        document.getElementById("ngaybatdau").value = data[0].ngayKhoiHanh;
-                        document.getElementById("ngaykeythuc").value = data[0].ngayKetThuc;
+                        $('#madoan').removeAttr("disabled");
+                        $("#ngaybatdau").val(data[0].ngayKhoiHanh);
+                        $("#ngaykeythuc").val(data[0].ngayKetThuc);
+                         $.post('/khachhang/ajaxGetGia',{MaTour :e.target.value,ThoiGianBatDau :$("#ngaybatdau").val(),ThoiGianKetThuc : $("#ngaykeythuc").val()},(data) => {
+                            console.log(data);
+                            $("#giave").val(data);
+                        });
                     }else{
-                            document.getElementById("madoan").innerHTML = "";
+                        $("#madoan").html("");
                     }
                     
                 });
-            });
+               
+            });;
 
-            $('#matour').change(function(e){
-                $.post('/khachhang/ajaxGetGia',{MaTour :e.target.value,ThoiGianBatDau :document.getElementById("ngaybatdau").value,ThoiGianKetThuc : document.getElementById("ngaykeythuc").value},function(data){
-                   document.getElementById("giave").value = data;
-                });
-            });
-
-             $('#madoan').change(function(e){
-                $.post('/khachhang/ajaxGetNgayDoan',{MaDoan :e.target.value},function(data){
-                    document.getElementById("ngaybatdau").value = data[0].ngayKhoiHanh;
-                    document.getElementById("ngaykeythuc").value = data[0].ngayKetThuc;
-                });
-            });
-
-             $('#madoan').change(function(e){
-                $.post('/khachhang/ajaxGetNgayDoanGia',{ThoiGianBatDau :document.getElementById("ngaybatdau").value,ThoiGianKetThuc : document.getElementById("ngaykeythuc").value},function(data){
-                    document.getElementById("giave").value = data;
+             $('#madoan').change((e) => {
+                $.post('/khachhang/ajaxGetNgayDoan',{MaDoan :e.target.value},(data) => {
+                     console.log(data);
+                    $("#ngaybatdau").val(data[0].ngayKhoiHanh);
+                    $("#ngaykeythuc").val(data[0].ngayKetThuc);
+                    $.post('/khachhang/ajaxGetNgayDoanGia',{ThoiGianBatDau :$("#ngaybatdau").val(),ThoiGianKetThuc : $("#ngaykeythuc").val()},function(data){
+                        console.log(data);
+                        $("#giave").val(data);
+                    });
                 });
             });
         });
+
+        function required()
+        {
+            var empt = document.forms["form"]["giave"].value;
+            var empt1 = document.forms["form"]["ngaybatdau"].value;
+            var empt2 = document.forms["form"]["ngaykeythuc"].value;
+
+            if (empt == "" ||empt1 == "" ||empt2 == "" )
+            {
+                alert("Tour này chưa có giá vé");
+                return false;
+            }
+        }
     </script>
 }

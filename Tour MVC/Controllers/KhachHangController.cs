@@ -56,14 +56,11 @@ namespace Tour_MVC.Controllers
 
             khachDuLichs = khachHangRepository.getItems(sortOrder.sortedStr, sortOrder.sortedOrder, search, pg, pageSize);
 
-            //int toRecs = ((Paginated<Tour>)tours).TotalRecords;
             var paper = new PageModel(khachDuLichs.TotalRecords, pg, pageSize);
 
             paper.sort = sort;
 
             this.ViewBag.Paper = paper;
-
-            //tours = tours.Skip((pg-1)*pageSize).Take(pageSize).ToList();    
 
             return View(khachDuLichs);
         }
@@ -96,12 +93,12 @@ namespace Tour_MVC.Controllers
             {
                 khachDuLiches = _khachHang.DanhSachKhach();
             }
-            for (int i = 0; i < khachDuLiches.Count; i++)
+            foreach (KhachDuLich k in khachDuLiches)
             {
-                if (khachDuLiches[i].MaKhachHang.Equals(MaKhachHang))
+                if (k.MaKhachHang.Equals(MaKhachHang))
                 {
 
-                    KhachDuLich tmp = khachDuLiches[i];
+                    KhachDuLich tmp = k;
                     return View(tmp);
                 }
             }
@@ -139,11 +136,11 @@ namespace Tour_MVC.Controllers
                 tours = _tour.TourComboBox();
             }
             ViewBag.TenTourList = new SelectList(tours, "MaTour", "TenTour");
-            for (int i = 0; i < khachDuLiches.Count; i++)
+            foreach (KhachDuLich k in khachDuLiches)
             {
-                if (khachDuLiches[i].MaKhachHang.Equals(MaKhachHang))
+                if (k.MaKhachHang.Equals(MaKhachHang))
                 {
-                    ViewBag.Id = khachDuLiches[i].MaKhachHang;
+                    ViewBag.Id = k.MaKhachHang;
                 }
             }
             return View();
@@ -161,7 +158,7 @@ namespace Tour_MVC.Controllers
                 }
                 else
                 {
-                    TempData["Message"] = "Thêm thất bại";
+                    TempData["Message"] = "Đã tồn tại khách hàng";
                     return Redirect("Index");
                 }
             }

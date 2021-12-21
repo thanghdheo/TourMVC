@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using QuanLyTour.DAO;
 using QuanLyTour.Models;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using Tour_MVC.Models;
@@ -18,7 +16,7 @@ namespace Tour_MVC
     {
         private readonly ILogger<HomeController> _logger;
 
-        private List<LoaiHinhDuLich> loaiHinhDuLichs;
+        private static List<LoaiHinhDuLich> loaiHinhDuLichs;
 
         private List<DiaDiemThamQuan> diaDiemThamQuans;
 
@@ -138,12 +136,12 @@ namespace Tour_MVC
                 loaiHinhDuLichs = _loaiHinhDAO.DanhSachLoaiHinh();
             }
             ViewBag.TenLoaiHinhList = new SelectList(loaiHinhDuLichs, "MaLoaiHinh", "TenLoaiHinh");
-            for (int i = 0; i < tourList.Count(); i++)
+            foreach(Tour t in tourList)
             {
-                if (tourList[i].MaTour.Equals(MaTour))
+                if (t.MaTour.Equals(MaTour))
                 {
                     
-                    Tour tmp = tourList[i];
+                    Tour tmp = t;
                     return View(tmp);
                 }
             }
@@ -178,13 +176,13 @@ namespace Tour_MVC
             }
             ViewBag.TenLoaiHinhList = new SelectList(loaiHinhDuLichs, "MaLoaiHinh", "TenLoaiHinh");
            
-            for (int i = 0; i < tourList.Count(); i++)
+            foreach(Tour t in tourList)
             {
-                if (tourList[i].MaTour.Equals(MaTour))
+                if (t.MaTour.Equals(MaTour))
                 {
 
-                    _unitRepository.tourModel = tourList[i];
-                    _tour = new TourDAO(tourList[i]);
+                    _unitRepository.tourModel = t;
+                    _tour = new TourDAO(t);
                     _unitRepository.bangGiaVes = _tour.DanhSachGiaTour();
                     _unitRepository.diaDiemThamQuans = _tour.DanhSachDiaDiem();
                     _unitRepository.doanDuLiches = _tour.DanhSachDoan();
@@ -200,11 +198,11 @@ namespace Tour_MVC
             {
                 tourList = _tour.DanhSachTour();
             }
-            for (int i = 0; i < tourList.Count(); i++)
+            foreach(Tour t in tourList)
             {
-                if (tourList[i].MaTour.Equals(MaTour))
+                if (t.MaTour.Equals(MaTour))
                 {
-                    ViewBag.Id = tourList[i].MaTour;
+                    ViewBag.Id = t.MaTour;
                 }
             }
             
@@ -242,7 +240,6 @@ namespace Tour_MVC
                     }
                    
                 }
-            return View();
         }
 
         public IActionResult ThemDiaDiem(string MaTour)
@@ -251,12 +248,12 @@ namespace Tour_MVC
             {
                 tourList = _tour.DanhSachTour();
             }
-            for (int i = 0; i < tourList.Count(); i++)
+            foreach(Tour t in tourList)
             {
-                if (tourList[i].MaTour.Equals(MaTour))
+                if (t.MaTour.Equals(MaTour))
                 {
-                    ViewBag.Id = tourList[i].MaTour;
-                    _tour = new TourDAO(tourList[i]);
+                    ViewBag.Id = t.MaTour;
+                    _tour = new TourDAO(t);
                     diaDiemThamQuans = _tour.DiaDiemComboBox();
                     ViewBag.diaDiemList = new SelectList(diaDiemThamQuans, "MaDiaDiem", "TenDiaDiem");
                 }
@@ -279,7 +276,6 @@ namespace Tour_MVC
                 return RedirectToAction("ChiTietTour", new { MaTour = chiTietDiaDiem.MaTour });
             }
 
-            return View();
         }
 
         public IActionResult Privacy()
@@ -302,25 +298,23 @@ namespace Tour_MVC
             }
             Tour tmp = new Tour();
 
-            for (int i = 0; i < tourList.Count(); i++)
+            foreach(Tour t in tourList)
             {
-                if (tourList[i].MaTour.Equals(MaTour))
-                    tmp = tourList[i];
+                if (t.MaTour.Equals(MaTour))
+                    tmp = t;
             }
 
             foreach (BangGiaVe giaVe in tmp.BangGiaVes)
             {
-               // MessageBox.Show(tour.BangGiaVes.LastOrDefault().ThoiGianKetThuc.ToString(), "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+               
                 if (from >= giaVe.ThoiGianBatDau && from <= giaVe.ThoiGianKetThuc)
                 {
-                    //MessageBox.Show("Ben trong 1", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 
 
                 if (to >= giaVe.ThoiGianBatDau && to <= giaVe.ThoiGianKetThuc)
                 {
-                    //MessageBox.Show("Ben ngoai 2", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 

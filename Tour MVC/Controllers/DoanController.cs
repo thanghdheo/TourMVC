@@ -70,7 +70,6 @@ namespace Tour_MVC.Controllers
 
             doanDuLichs = _doanRepository.getItems(sortOrder.sortedStr, sortOrder.sortedOrder, search, pg, pageSize);
 
-            //int toRecs = ((Paginated<Tour>)tours).TotalRecords;
             var paper = new PageModel(doanDuLichs.TotalRecords, pg, pageSize);
 
             paper.sort = sort;
@@ -81,13 +80,11 @@ namespace Tour_MVC.Controllers
             return View(doanDuLichs);
         }
 
-        // GET: DoanController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: DoanController/Create
         [HttpGet]
         public IActionResult ThemDoan()
         {
@@ -129,12 +126,12 @@ namespace Tour_MVC.Controllers
 
             ViewBag.TenTourList = new SelectList(tours, "MaTour", "TenTour");
 
-            for (int i = 0; i < doanDuLiches.Count; i++)
+            foreach (DoanDuLich d in doanDuLiches)
             {
-                if (doanDuLiches[i].MaSoDoan.Equals(MaSoDoan))
+                if (d.MaSoDoan.Equals(MaSoDoan))
                 {
 
-                    DoanDuLich doan = doanDuLiches[i];
+                    DoanDuLich doan = d;
                     ViewBag.gia = layGiaVe(doan.MaTour, (DateTime)doan.NgayKetThuc, (DateTime)doan.NgayKhoiHanh);
                     return View(doan);
                 }
@@ -165,13 +162,13 @@ namespace Tour_MVC.Controllers
                 doanDuLiches = _doan.DanhSachDoan();
             }
 
-            for (int i = 0; i < doanDuLiches.Count; i++)
+            foreach (DoanDuLich d in doanDuLiches)
             {
-                if (doanDuLiches[i].MaSoDoan.Equals(MaSoDoan))
+                if (d.MaSoDoan.Equals(MaSoDoan))
                 {
 
-                    _doanRepository.doanModel = doanDuLiches[i];
-                    _doan = new DoanDuLichDAO(doanDuLiches[i]);
+                    _doanRepository.doanModel = d;
+                    _doan = new DoanDuLichDAO(d);
                     _doanRepository.chitietCps = _doan.DanhSachChiPhi();
                     _doanRepository.phanBos = _doan.DanhSachPhanBo();
                     _doanRepository.khachDuLiches = _doan.DanhSachKhach();
@@ -190,12 +187,12 @@ namespace Tour_MVC.Controllers
             {
                 doanDuLiches = _doan.DanhSachDoan();
             }
-            for (int i = 0; i < doanDuLiches.Count(); i++)
+            foreach (DoanDuLich d in doanDuLiches)
             {
-                if (doanDuLiches[i].MaSoDoan.Equals(MaSoDoan))
+                if (d.MaSoDoan.Equals(MaSoDoan))
                 {
-                    ViewBag.Id = doanDuLiches[i].MaSoDoan;
-                    _doan = new DoanDuLichDAO(doanDuLiches[i]);
+                    ViewBag.Id = d.MaSoDoan;
+                    _doan = new DoanDuLichDAO(d);
                     chiPhis = _doan.ChiPhiComboBox();
                     ViewBag.chiPhiList = new SelectList(chiPhis, "MaChiPhi", "TenChiPhi");
                 }
@@ -228,12 +225,12 @@ namespace Tour_MVC.Controllers
             {
                 doanDuLiches = _doan.DanhSachDoan();
             }
-            for (int i = 0; i < doanDuLiches.Count(); i++)
+            foreach (DoanDuLich d in doanDuLiches)
             {
-                if (doanDuLiches[i].MaSoDoan.Equals(MaSoDoan))
+                if (d.MaSoDoan.Equals(MaSoDoan))
                 {
-                    ViewBag.Id = doanDuLiches[i].MaSoDoan;
-                    _doan = new DoanDuLichDAO(doanDuLiches[i]);
+                    ViewBag.Id = d.MaSoDoan;
+                    _doan = new DoanDuLichDAO(d);
                     nhanViens = _doan.NhanVienComboBox();
                     ViewBag.nhanvienList = new SelectList(nhanViens, "MaNhanVien", "TenNhanVien");
                 }
@@ -266,12 +263,12 @@ namespace Tour_MVC.Controllers
             {
                 khachDuLiches = _doan.DanhSachKhachHang();
             }
-            for (int i = 0; i < khachDuLiches.Count; i++)
-            {
-                if (khachDuLiches[i].MaKhachHang.Equals(MaKhachHang))
-                {
 
-                    ChiTietDoanKhach tmp = khachDuLiches[i];
+            foreach(ChiTietDoanKhach k in khachDuLiches)
+            {
+                if (k.MaKhachHang.Equals(MaKhachHang))
+                {
+                    ChiTietDoanKhach tmp = k;
                     return View(tmp);
                 }
             }

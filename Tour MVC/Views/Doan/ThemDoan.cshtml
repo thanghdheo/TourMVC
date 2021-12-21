@@ -52,35 +52,35 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-        $(document).ready(function(){
-            $('#matour').change(function(e){
-                $.post('/doan/ajaxGetGiaVe',{MaTour : e.target.value},function(data){
+        $(document).ready(() => {
+            $('#matour').change((e) => {
+                $.post('/doan/ajaxGetGiaVe',{MaTour : e.target.value},(data) => {
                     if(data.length > 0){
                         console.log( data[0].gia,data[0].thoiGianBatDau,data[0].thoiGianKetThuc);
-                        document.getElementById('giave').value =  data[0].gia ;
-                        document.getElementById('ngaybatdau').value = data[0].thoiGianBatDau  ;
-                        document.getElementById('ngaykeythuc').value = data[0].thoiGianKetThuc ;
-                        document.getElementById('ngaybatdau').removeAttribute("disabled")  ;
-                        document.getElementById('ngaykeythuc').removeAttribute("disabled");
+                         $('#giave').val(data[0].gia);
+                         $('#ngaybatdau').val(data[0].thoiGianBatDau);
+                         $('#ngaykeythuc').val(data[0].thoiGianKetThuc);
+                         $('#ngaybatdau').removeAttr("disabled")  ;
+                         $('#ngaykeythuc').removeAttr("disabled");
                     }else{
                         console.log("abc")
-                        document.getElementById('giave').value ="";
-                        document.getElementById('ngaybatdau').value = "" ;
-                        document.getElementById('ngaykeythuc').value =  "";
+                         $('#giave').val("");
+                         $('#ngaybatdau').val("" ) ;
+                         $('#ngaykeythuc').val("");
                     }
                     ;
                 });
             });
-            $('#ngaybatdau').change(function(e){
-                $.post('/doan/ajaxKiemTraNgayBatDau',{MaTour :document.getElementById('matour').value,ThoiGianBatDau: e.target.value,ThoiGianKetThuc : document.getElementById("ngaykeythuc").value},function(data){
+            $('#ngaybatdau').change((e)=>{
+                $.post('/doan/ajaxKiemTraNgayBatDau',{MaTour :$('#matour').val(),ThoiGianBatDau: e.target.value,ThoiGianKetThuc : $("#ngaykeythuc").val()},(data) => {
                     console.log(data);
-                    document.getElementById('giave').value =data;
+                    $('#giave').val( data);
                 });
             });
-             $('#ngaykeythuc').change(function(e){
-                $.post('/doan/ajaxKiemTraNgayKetThuc',{MaTour :document.getElementById('matour').value,ThoiGianKetThuc: e.target.value,ThoiGianBatDau : document.getElementById("ngaybatdau").value},function(data){
+             $('#ngaykeythuc').change((e) => {
+                $.post('/doan/ajaxKiemTraNgayKetThuc',{MaTour : $('#matour').val(),ThoiGianKetThuc: e.target.value,ThoiGianBatDau : $("#ngaybatdau").val()},(data) => {
                     console.log(data);
-                    document.getElementById('giave').value =data;
+                    $('#giave').val( data);
                 });
             });
         });
