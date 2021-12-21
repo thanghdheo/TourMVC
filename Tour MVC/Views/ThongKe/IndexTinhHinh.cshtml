@@ -1,0 +1,145 @@
+﻿@{
+    ViewData["Title"] = "Thống kê tình hình";
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class ="card">
+            <div class="card-header">
+               Tình hình
+            </div>
+            <div class="card-body">
+                <canvas class="my-4 h-25" id="bar"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <div class ="card">
+            <div class="card-header">
+                Tình hình
+            </div>
+            <div class="card-body">
+                <canvas class="my-4 h-25" id="pie"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class ="card">
+            <div class="card-header">
+                Tình hình
+            </div>
+            <div class="card-body">
+                <canvas class="my-4 h-25" id="pie1"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js"  ></script>
+<script type="text/javascript">
+        $(document).ready(function(){
+            $.get('/thongke/TKTinhHinh',{},function(data){   
+                console.log(data);
+                getThongKe(data);
+            });
+        });
+
+        var mybarhart = null;
+        var mypieChart = null;
+        var mypieChart1 = null;
+
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF'.split('');
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function getRandomColorEachEmployee(count) {
+            var data =[];
+            for (var i = 0; i < count; i++) {
+                data.push(getRandomColor());
+            }
+            return data;
+        }
+        
+        function getThongKe(data){
+            var lables = [];
+            var datas =[];
+            var datas1 =[];
+            $.each(data,function(index,item){
+                lables.push(item.tour.tenTour);
+                datas.push(item.doanhSo);
+                datas1.push(item.soDoanThamQuan);
+            })
+
+            console.log(lables);
+            console.log(datas);
+             console.log(datas1);
+            if(mybarhart != null){
+                mybarhart.destroy();
+            }
+            var barchart = document.getElementById('bar').getContext('2d');
+            var barchartdata = {
+                    labels: lables,
+                    datasets: [{
+                        label: 'Thống kê doanh số',
+                        data: datas,
+                        backgroundColor: getRandomColorEachEmployee(lables.length),
+
+                    },{
+                        label: 'Thống kê số đoàn đi tour',
+                        data: datas1,
+                        backgroundColor: getRandomColorEachEmployee(lables.length),
+
+                    }]
+                }
+            mybarhart = new Chart(barchart,{
+                type : 'bar',
+                data:barchartdata,
+            })
+           
+
+            if(mypieChart != null){
+                mypieChart.destroy();
+            }
+            var piechart = document.getElementById('pie').getContext('2d');
+            mypieChart = new Chart(piechart,{
+                type : 'pie',
+                data:{
+                    labels: lables,
+                    datasets: [{
+                        label: 'Bar chart',
+                        data: datas,
+                         backgroundColor: getRandomColorEachEmployee(lables.length),
+
+                    }]
+                }
+            })
+
+            if(mypieChart1 != null){
+                mypieChart1.destroy();
+            }
+            var piechart1 = document.getElementById('pie1').getContext('2d');
+            mypieChart1 = new Chart(piechart1,{
+                type : 'pie',
+                data:{
+                    labels: lables,
+                    datasets: [{
+                        label: 'Bar chart',
+                        data: datas1,
+                         backgroundColor: getRandomColorEachEmployee(lables.length),
+
+                    }]
+                }
+            })
+        }
+   
+</script>
+}

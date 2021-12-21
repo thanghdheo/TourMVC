@@ -34,6 +34,26 @@ namespace Tour_MVC.Controllers
             return View();
         }
 
+        public IActionResult IndexNhanVien()
+        {
+            return View();
+        }
+
+        public IActionResult IndexDoanhThu()
+        {
+            if (tourList.Count() == 0)
+            {
+                tourList = _tour.DanhSachTour();
+            }
+            ViewBag.tourList = new SelectList(tourList, "MaTour", "TenTour");
+            return View();
+        }
+
+        public IActionResult IndexTinhHinh()
+        {
+            return View();
+        }
+
         public IActionResult TKChiPhi(string MaTour, DateTime ThoiGianBatDau, DateTime ThoiGianKetThuc)
         {
             if (tourList.Count() == 0)
@@ -50,7 +70,35 @@ namespace Tour_MVC.Controllers
             var json = _thongke.TKChiPhi(tmp, ThoiGianBatDau, ThoiGianKetThuc);
             return Json(json);
         }
-        
+
+        public IActionResult TKSoLanDiTour(DateTime ThoiGianBatDau, DateTime ThoiGianKetThuc)
+        {
+            var json = _thongke.TKNhanVien(ThoiGianBatDau, ThoiGianKetThuc);
+            return Json(json);
+        }
+
+        public IActionResult TKDoanhThu(string MaTour, DateTime ThoiGianBatDau, DateTime ThoiGianKetThuc)
+        {
+            if (tourList.Count() == 0)
+            {
+                tourList = _tour.DanhSachTour();
+            }
+            Tour tmp = new Tour();
+            foreach (Tour t in tourList)
+            {
+                if (t.MaTour.Equals(MaTour))
+                    tmp = t;
+            }
+
+            var json = _thongke.TKDoanhThu(tmp, ThoiGianBatDau, ThoiGianKetThuc);
+            return Json(json);
+        }
+
+        public IActionResult TKTinhHinh()
+        {
+            var json = _thongke.TKTinhHinh();
+            return Json(json);
+        }
 
         public JsonResult ajaxGetNgay(string MaTour)
         {
