@@ -1,7 +1,6 @@
 ﻿@model DoanRepository
 
 @{
-    int i = 1,j=1,t=1;
     double chiphi = 0;
     double doanhthu = (double) Model.doanModel.DoanhThu;
 
@@ -74,7 +73,8 @@
         </dl>
         </div>
         <div class="col-5">
-             <h5>Danh sách chi phí</h5>
+            <div>
+                 <h5>Danh sách chi phí</h5>
              <p>
                 <a class="btn btn-success"  asp-action="ThemChiPhi" asp-route-MaSoDoan="@Model.doanModel.MaSoDoan">Thêm chi phí</a>
             </p>
@@ -84,22 +84,18 @@
                 <thead >
                     <tr>
                         <th>
-                                STT
-                        </th>
-                        <th>
                                 Tổng tiền 
                         </th>
                         <th>
                                Loại chi phí
                         </th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
             @foreach (var item in Model.chitietCps) {
                     <tr>
-                        <td>
-                            @i
-                        </td>
                         <td >
                             <div class="line">
                                 @String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0,0}",@item.TongTien)
@@ -108,18 +104,24 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.MaChiPhiNavigation.TenChiPhi)
                         </td>
+                        <td>
+                            <p>
+                                <a class="btn btn-warning"  asp-action="SuaChiPhi" asp-route-MaSoDoan="@item.MaSoDoan" asp-route-MaChiPhi="@item.MaChiPhi">Sửa chi phí</a>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <a class="btn btn-danger"  asp-action="XoaChiPhi" asp-route-MaSoDoan="@item.MaSoDoan" asp-route-MaChiPhi="@item.MaChiPhi">Xoá chi phí</a>
+                            </p>
+                        </td>
                     </tr>
-                    i++;
             }
                 </tbody>
             </table>
             }
             
-        </div>
-    </div>
-    <hr class="mt-2 mb-2" />
-    <div class="row mt-5">
-        <div class="col-6">
+            </div>
+             <div >
              <h5>Danh sách phân bố</h5>
              <p>
                 <a class="btn btn-success"  asp-action="ThemPhanBo" asp-route-MaSoDoan="@Model.doanModel.MaSoDoan">Thêm phân bố</a>
@@ -130,22 +132,18 @@
                 <thead >
                     <tr>
                         <th>
-                                STT
-                        </th>
-                        <th>
                                 Nhiệm vụ 
                         </th>
                         <th>
                                Nhân viên
                         </th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
             @foreach (var item in Model.phanBos) {
                     <tr>
-                        <td>
-                            @j
-                        </td>
                         <td >
                             <div class="line">
                                 @Html.DisplayFor(modelItem => item.Nhiemvu)
@@ -154,15 +152,28 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.MaNhanVienNavigation.TenNhanVien)
                         </td>
+                        <td>
+                            <p>
+                                <a class="btn btn-warning"  asp-action="SuaPhanBo" asp-route-MaSoDoan="@item.MaSoDoan" asp-route-MaNhanVien="@item.MaNhanVien">Sửa phân bố</a>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <a class="btn btn-danger"  asp-action="XoaPhanBo" asp-route-MaSoDoan="@item.MaSoDoan" asp-route-MaNhanVien="@item.MaNhanVien">Xoá phân bố</a>
+                            </p>
+                        </td>
                     </tr>
-                    j++;
             }
                 </tbody>
             </table>
             }
             
         </div>
-        <div class="col-6">
+        </div>
+    </div>
+    <hr class="mt-2 mb-2" />
+    <div class="row mt-5">
+        <div class="col-12">
              <h5>Danh sách khách hàng</h5>
              
             @if(Model.khachDuLiches.Count() > 0)
@@ -170,9 +181,6 @@
                 <table class="table table-striped table-bordered table-hover">
                 <thead >
                     <tr>
-                        <th>
-                                STT
-                        </th>
                         <th>
                                 Tên khách hàng
                         </th>
@@ -200,9 +208,6 @@
                 <tbody>
             @foreach (var item in Model.khachDuLiches) {
                     <tr>
-                        <td>
-                            @t
-                        </td>
                         <td >
                             <div class="line">
                                 @Html.DisplayFor(modelItem => item.MaKhachHangNavigation.TenKhachHang)
@@ -242,8 +247,12 @@
                                 <a class="btn btn-success"  asp-action="SuaKhachHang" asp-route-MaKhachHang="@item.MaKhachHang">Sửa khách hàng</a>
                             </p>
                         </td>
+                        <td>
+                            <p>
+                                <a class="btn btn-danger"  asp-action="XoaKhachHang" asp-route-MaKhachHang="@item.MaKhachHang">Xoá khách hàng</a>
+                            </p>
+                        </td>
                     </tr>
-                    t++;
             }
                 </tbody>
             </table>

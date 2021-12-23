@@ -1,0 +1,42 @@
+﻿@model ChiTietDiaDiemRepository
+
+<h4>Chi tiết địa điểm</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="SuaDiaDiem" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input asp-for="chiTietDiaDiem.MaTour" class="form-control" type="hidden"/>
+                <input asp-for="chiTietDiaDiem.MaDiaDiem" class="form-control" type="hidden"/>
+            <div class="form-group">
+                <label asp-for="chiTietDiaDiem.Stt" class="control-label">Chọn số thứ tự</label>
+                <select id="stt"  asp-for="chiTietDiaDiem.Stt" asp-items="ViewBag.listDiaDiem" >
+                </select>
+                <span asp-validation-for="chiTietDiaDiem.Stt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="sttMoi" class="control-label">Số thứ tự mới</label>
+                <input id="sttMoi" style="background-color:	#C0C0C0" asp-for="sttMoi" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Sửa" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Danh sách tour</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        var before = $('#stt').val()
+        $('#stt').change(()=>{
+            $('#sttMoi').val($('#stt').val())
+            $('#stt').val(before)
+        })
+    </script>
+}
+

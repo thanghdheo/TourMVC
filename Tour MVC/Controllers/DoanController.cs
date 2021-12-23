@@ -17,9 +17,13 @@ namespace Tour_MVC.Controllers
 
         private List<ChiTietDoanKhach> khachDuLiches;
 
+        private List<ChitietCp> chitietCps;
+
         private List<Tour> tours;
 
         private List<ChiPhi> chiPhis;
+
+        private List<PhanBo> phanBos;
 
         private List<NhanVien> nhanViens;
 
@@ -43,6 +47,8 @@ namespace Tour_MVC.Controllers
         {
             doanDuLiches = new List<DoanDuLich>();
             chiPhis = new List<ChiPhi>();
+            chitietCps = new List<ChitietCp>();
+            phanBos = new List<PhanBo>();
             nhanViens = new List<NhanVien>();
             khachDuLiches = new List<ChiTietDoanKhach>();
             tours = new List<Tour>();   
@@ -275,6 +281,7 @@ namespace Tour_MVC.Controllers
             return View();
         }
 
+
         [HttpPost]
         public IActionResult SuaKhachHang(ChiTietDoanKhach chiTiet)
         {
@@ -294,6 +301,191 @@ namespace Tour_MVC.Controllers
             return View();
         }
 
+        public IActionResult SuaChiPhi(string MaSoDoan,string MaChiPhi)
+        {
+            if (doanDuLiches.Count() == 0)
+            {
+                doanDuLiches = _doan.DanhSachDoan();
+            }
+            foreach (DoanDuLich d in doanDuLiches)
+            {
+                if (d.MaSoDoan.Equals(MaSoDoan))
+                {
+                    _doan = new DoanDuLichDAO(d);
+                    chitietCps = _doan.DanhSachChiPhi();
+                   
+                    foreach (ChitietCp ct in chitietCps)
+                    {
+                        if (ct.MaChiPhi.Equals(MaChiPhi))
+                        {
+                            return View(ct);
+                        }
+                    }
+                }
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult SuaChiPhi(ChitietCp chitiet)
+        {
+            if (ModelState.IsValid)
+            {
+                if (_ctChiPhi.Sua(chitiet))
+                {
+                    TempData["Message"] = "Sửa thành công";
+                    return RedirectToAction("ChiTietDoan", new { MaSoDoan = chitiet.MaSoDoan });
+                }
+                else
+                {
+                    TempData["Message"] = "Sửa thất bại";
+                    return RedirectToAction("ChiTietDoan", new { MaSoDoan = chitiet.MaSoDoan });
+                }
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult XoaChiPhi(string MaSoDoan, string MaChiPhi)
+        {
+            if (doanDuLiches.Count() == 0)
+            {
+                doanDuLiches = _doan.DanhSachDoan();
+            }
+            foreach (DoanDuLich d in doanDuLiches)
+            {
+                if (d.MaSoDoan.Equals(MaSoDoan))
+                {
+                    _doan = new DoanDuLichDAO(d);
+                    chitietCps = _doan.DanhSachChiPhi();
+
+                    foreach (ChitietCp ct in chitietCps)
+                    {
+                            if (ct.MaChiPhi.Equals(MaChiPhi))
+                            {
+                                if (_ctChiPhi.Xoa(ct))
+                                {
+                                    TempData["Message"] = "Xoá thành công";
+                                    return RedirectToAction("ChiTietDoan", new { MaSoDoan = ct.MaSoDoan });
+                                }
+                                else
+                                {
+                                    TempData["Message"] = "Xoá thất bại";
+                                    return RedirectToAction("ChiTietDoan", new { MaSoDoan = ct.MaSoDoan });
+                                }
+                            }
+                        }
+                    }
+                }
+            return RedirectToAction("ChiTietDoan", new { MaSoDoan = MaSoDoan });
+        }
+
+        public IActionResult SuaPhanBo(string MaSoDoan, string MaNhanVien)
+        {
+            if (doanDuLiches.Count() == 0)
+            {
+                doanDuLiches = _doan.DanhSachDoan();
+            }
+            foreach (DoanDuLich d in doanDuLiches)
+            {
+                if (d.MaSoDoan.Equals(MaSoDoan))
+                {
+                    _doan = new DoanDuLichDAO(d);
+                    phanBos = _doan.DanhSachPhanBo();
+
+                    foreach (PhanBo p in phanBos)
+                    {
+                        if (p.MaNhanVien.Equals(MaNhanVien))
+                        {
+                            return View(p);
+                        }
+                    }
+                }
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult SuaPhanBo(PhanBo pb)
+        {
+            if (ModelState.IsValid)
+            {
+                if (_phanBo.Sua(pb))
+                {
+                    TempData["Message"] = "Sửa thành công";
+                    return RedirectToAction("ChiTietDoan", new { MaSoDoan = pb.MaSoDoan });
+                }
+                else
+                {
+                    TempData["Message"] = "Sửa thất bại";
+                    return RedirectToAction("ChiTietDoan", new { MaSoDoan = pb.MaSoDoan });
+                }
+            }
+
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult XoaPhanBo(string MaSoDoan, string MaNhanVien)
+        {
+            if (doanDuLiches.Count() == 0)
+            {
+                doanDuLiches = _doan.DanhSachDoan();
+            }
+            foreach (DoanDuLich d in doanDuLiches)
+            {
+                if (d.MaSoDoan.Equals(MaSoDoan))
+                {
+                    _doan = new DoanDuLichDAO(d);
+                    phanBos = _doan.DanhSachPhanBo();
+
+                    foreach (PhanBo p in phanBos)
+                    {
+                        if (p.MaNhanVien.Equals(MaNhanVien))
+                        {
+                            if (_phanBo.Xoa(p))
+                                {
+                                    TempData["Message"] = "Xoá thành công";
+                                    return RedirectToAction("ChiTietDoan", new { MaSoDoan = p.MaSoDoan });
+                                }
+                                else
+                                {
+                                    TempData["Message"] = "Xoá thất bại";
+                                    return RedirectToAction("ChiTietDoan", new { MaSoDoan = p.MaSoDoan });
+                                }
+                        }
+                    }
+                }
+            }
+            return RedirectToAction("ChiTietDoan", new { MaSoDoan = MaSoDoan });
+        }
+
+        [HttpGet]
+        public IActionResult XoaKhachHang(string MaKhachHang) 
+        {
+            if (khachDuLiches.Count == 0)
+            {
+                khachDuLiches = _doan.DanhSachKhachHang();
+            }
+
+            foreach (ChiTietDoanKhach k in khachDuLiches)
+            {
+                if (k.MaKhachHang.Equals(MaKhachHang))
+                {
+                    if (_chiTietDoanKhach.Xoa(k))
+                    {
+                        TempData["Message"] = "Xoá thành công";
+                        return RedirectToAction("ChiTietDoan", new { MaSoDoan = k.MaSoDoan });
+                    }
+                    else
+                    {
+                        TempData["Message"] = "Xoá thất bại";
+                        return RedirectToAction("ChiTietDoan", new { MaSoDoan = k.MaSoDoan });
+                    }
+                }
+            }
+            return View();
+        }
 
         public JsonResult ajaxGetGiaVe(string MaTour)
         {

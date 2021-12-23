@@ -1,8 +1,6 @@
 ﻿@model TourRepository
 
-@{
-    int i = 1,j=1,t=1;
-}
+
  @if(TempData["Message"] != null)
     {
         <div class="alert alert-info ">
@@ -42,71 +40,65 @@
         </dl>
         </div>
          <div class="col-5">
-             <h5>Danh sách giá tour</h5>
-             <p>
-                <a class="btn btn-success" asp-route-MaTour="@Model.tourModel.MaTour" asp-action="ThemGiaTour">Thêm giá tour</a>
-            </p>
-            @if(Model.bangGiaVes.Count() > 0)
-            {
-                <table class="table table-striped table-bordered table-hover">
-                <thead >
-                    <tr>
-                        <th>
-                            @*<i class="@sortOrder.getColumn("stt").sortIcon" aria-hidden="true"></i>*@
-                            @*<a asp-action="Index" asp-route-sort="@sortOrder.getColumn("stt").sort">*@
-                                STT
-                            @*</a>*@
-                        </th>
-                        <th>
-                            @*<i class="@sortOrder.getColumn("tên tour").sortIcon" aria-hidden="true"></i>
-                            <a asp-action="Index" asp-route-sort="@sortOrder.getColumn("tên tour").sort">*@
-                                Giá tour
-                           @* </a>*@
-                        </th>
-                        <th>
-                           @* <i class="@sortOrder.getColumn("đặc điểm").sortIcon" aria-hidden="true"></i>
-                            <a asp-action="Index" asp-route-sort="@sortOrder.getColumn("đặc điểm").sort">*@
-                               Tgian bắt đầu
-                           @* </a>*@
-                        </th>
-                        <th>
-                           @* <i class="@sortOrder.getColumn("tên loại hình").sortIcon" aria-hidden="true"></i>
-                            <a asp-action="Index" asp-route-sort="@sortOrder.getColumn("tên loại hình").sort">*@
-                                Tgian kết thúc
-                           @* </a>*@
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-            @foreach (var item in Model.bangGiaVes) {
-                    <tr>
-                        <td>
-                            @i
-                        </td>
-                        <td>
-                            @String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0,0}",item.Gia)
-                        </td>
-                        <td >
-                            <div class="line">
-                                @Html.DisplayFor(modelItem => item.ThoiGianBatDau)
-                            </div>
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ThoiGianKetThuc)
-                        </td>
-                    </tr>
-                    i++;
-            }
-                </tbody>
-            </table>
-            }
-            
-        </div>
-         
-    </div>
-    <hr />
-    <div class="row mt-5">
-        <div class="col-6">
+             <div>
+                <h5>Danh sách giá tour</h5>
+                 <p>
+                    <a class="btn btn-success" asp-route-MaTour="@Model.tourModel.MaTour" asp-action="ThemGiaTour">Thêm giá tour</a>
+                </p>
+                @if(Model.bangGiaVes.Count() > 0)
+                {
+                    <table class="table table-striped table-bordered table-hover">
+                    <thead >
+                        <tr>
+                            <th>
+                                @*<i class="@sortOrder.getColumn("tên tour").sortIcon" aria-hidden="true"></i>
+                                <a asp-action="Index" asp-route-sort="@sortOrder.getColumn("tên tour").sort">*@
+                                    Giá tour
+                               @* </a>*@
+                            </th>
+                            <th>
+                               @* <i class="@sortOrder.getColumn("đặc điểm").sortIcon" aria-hidden="true"></i>
+                                <a asp-action="Index" asp-route-sort="@sortOrder.getColumn("đặc điểm").sort">*@
+                                   Tgian bắt đầu
+                               @* </a>*@
+                            </th>
+                            <th>
+                               @* <i class="@sortOrder.getColumn("tên loại hình").sortIcon" aria-hidden="true"></i>
+                                <a asp-action="Index" asp-route-sort="@sortOrder.getColumn("tên loại hình").sort">*@
+                                    Tgian kết thúc
+                               @* </a>*@
+                            </th>
+                            <th>
+
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                @foreach (var item in Model.bangGiaVes) {
+                        <tr>
+                            <td>
+                                @String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0,0}",item.Gia)
+                            </td>
+                            <td >
+                                <div class="line">
+                                    @Html.DisplayFor(modelItem => item.ThoiGianBatDau)
+                                </div>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ThoiGianKetThuc)
+                            </td>
+                            <td>
+                                 <p>
+                                    <a class="btn btn-warning" asp-route-MaTour="@item.MaTour" asp-route-MaBangGia="@item.MaBangGia" asp-action="SuaGiaTour">Sửa giá tour</a>
+                                </p>
+                            </td>
+                        </tr>
+                }
+                    </tbody>
+                </table>
+                }
+             </div>
+              <div >
             <h5>Danh sách địa điểm</h5>
              <p>
                 <a class="btn btn-success" asp-route-MaTour="@Model.tourModel.MaTour" asp-action="ThemDiaDiem">Thêm địa điểm</a>
@@ -128,26 +120,44 @@
                                 Địa điểm tham quan
                            @* </a>*@
                         </th>
+                        <th>
+
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
             @foreach (var item in Model.diaDiemThamQuans) {
                     <tr>
                         <td>
-                            @j
+                             @Html.DisplayFor(modelItem => item.Stt)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.MaDiaDiemNavigation.TenDiaDiem)
                         </td>
+                        <td>
+                             <p>
+                                <a class="btn btn-warning" asp-route-MaTour="@item.MaTour" asp-route-MaDiaDiem="@item.MaDiaDiem" asp-action="SuaDiaDiem">Sửa địa điểm</a>
+                            </p>
+                        </td>
+                         <td>
+                             <p>
+                                <a class="btn btn-danger" asp-route-MaTour="@item.MaTour" asp-route-MaDiaDiem="@item.MaDiaDiem" asp-action="XoaDiaDiem">Xoá địa điểm</a>
+                            </p>
+                        </td>
                     </tr>
-                    j++;
             }
                 </tbody>
             </table>
             }
            
         </div>
-        <div class="col-6">
+        </div>
+         
+    </div>
+    <hr />
+    <div class="row mt-5">
+       
+        <div class="col-12">
              <h5>Danh sách đoàn</h5>
             @if(Model.doanDuLiches.Count() > 0)
             {
@@ -156,12 +166,6 @@
             <table class="table table-striped table-bordered table-hover">
                         <thead >
                             <tr>
-                                 <th>
-                                    @*<i class="@sortOrder.getColumn("stt").sortIcon" aria-hidden="true"></i>*@
-                                    @*<a asp-action="Index" asp-route-sort="@sortOrder.getColumn("stt").sort">*@
-                                        STT
-                                    @*</a>*@
-                                </th>
                                 <th>
                                     @*<i class="@sortOrder.getColumn("stt").sortIcon" aria-hidden="true"></i>*@
                                     @*<a asp-action="Index" asp-route-sort="@sortOrder.getColumn("stt").sort">*@
@@ -198,9 +202,6 @@
                     @foreach (var item in Model.doanDuLiches) {
                             <tr>
                                 <td>
-                                    @t
-                                </td>
-                                <td>
                                     @Html.DisplayFor(modelItem => item.TenDoanDuLich)
                                 </td>
                                 <td >
@@ -218,7 +219,6 @@
                                     @Html.DisplayFor(modelItem => item.ChiTietChuongTrinh)
                                 </td>
                             </tr>
-                            t++;
                     }
                         </tbody>
                     </table>

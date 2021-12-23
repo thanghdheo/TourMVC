@@ -20,7 +20,11 @@ namespace Tour_MVC
 
         private List<DiaDiemThamQuan> diaDiemThamQuans;
 
+        private List<ChiTietDiaDiem> chiTietDiaDiems;
+
         private List<Tour> tourList;
+
+        private List<BangGiaVe> bangGiaVes;
 
         private List<DoanDuLich> doans;
 
@@ -28,23 +32,30 @@ namespace Tour_MVC
 
         private TourDAO _tour;
 
+        private BangGiaVeDAO _bangGiaVe;
+
         private LoaiHinhDAO _loaiHinhDAO;
 
         private BangGiaVeDAO _bangGiaVeDAO;
 
         private TourRepository _unitRepository;
 
+        private ChiTietDiaDiemRepository _diemRepository;
         private bool isSuccess = false;
         public HomeController(ILogger<HomeController> logger)
         {
             loaiHinhDuLichs = new List<LoaiHinhDuLich>();
             diaDiemThamQuans = new List<DiaDiemThamQuan>();
             tourList = new List<Tour>();
+            bangGiaVes = new List<BangGiaVe>();
             doans = new List<DoanDuLich>();
+            chiTietDiaDiems = new List<ChiTietDiaDiem>();
             _tour = new TourDAO();
+            _bangGiaVe = new BangGiaVeDAO();
             _loaiHinhDAO = new LoaiHinhDAO();
             _bangGiaVeDAO = new BangGiaVeDAO();
             _unitRepository = new TourRepository();
+            _diemRepository = new ChiTietDiaDiemRepository();
             _logger = logger;
         }
         public IActionResult Index(string sort = "", string search = "", int pg = 1, int pageSize = 5)
@@ -322,5 +333,129 @@ namespace Tour_MVC
             return true;
         }
 
+        [HttpGet]
+        public IActionResult SuaGiaTour(string MaTour,string MaBangGia)
+        {
+            if (tourList.Count() == 0)
+            {
+                tourList = _tour.DanhSachTour();
+            }
+
+            foreach (Tour t in tourList)
+            {
+                if (t.MaTour.Equals(MaTour))
+                {
+                    TourDAO tmp = new TourDAO(t);
+                    bangGiaVes = tmp.DanhSachGiaTour();
+                    foreach (BangGiaVe bg in bangGiaVes)
+                    {
+                        if (bg.MaBangGia == MaBangGia)
+                        {
+                            return View(bg);
+                        }
+                    }
+                }
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult SuaGiaTour(BangGiaVe bangGiaVe)
+        {
+            if (ModelState.IsValid)
+            {
+                if (_bangGiaVe.SuaGiaVe(bangGiaVe))
+                {
+                    TempData["Message"] = "Sửa thành công";
+                    return RedirectToAction("ChiTietTour", new { MaTour = bangGiaVe.MaTour });
+                }
+                else
+                {
+                    TempData["Message"] = "Sửa thất bại";
+                    return RedirectToAction("ChiTietTour", new { MaTour = bangGiaVe.MaTour });
+                }
+            }
+            return View();
+        }
+
+        public IActionResult SuaDiaDiem(string MaTour,string MaDiaDiem)
+        {
+            if (tourList.Count() == 0)
+            {
+                tourList = _tour.DanhSachTour();
+            }
+
+            foreach (Tour t in tourList)
+            {
+                if (t.MaTour.Equals(MaTour))
+                {
+                    TourDAO tmp = new TourDAO(t);
+                    chiTietDiaDiems = tmp.DanhSachDiaDiem();
+                    ViewBag.listDiaDiem = new SelectList(chiTietDiaDiems, "Stt", "Stt");
+                    foreach(ChiTietDiaDiem ct in chiTietDiaDiems)
+                    {
+                        if(ct.MaDiaDiem == MaDiaDiem)
+                        {
+                            _diemRepository.chiTietDiaDiem = ct;
+                            return View(_diemRepository);
+                        }
+                    }
+                }
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult SuaDiaDiem(ChiTietDiaDiemRepository ct)
+        {
+            if (_tour.SuaDiaDiem(Int16.Parse(ct.sttMoi), ct.chiTietDiaDiem))
+            {
+                TempData["Message"] = "Thêm thành công";
+                return RedirectToAction("ChiTietTour", new { MaTour = ct.chiTietDiaDiem.MaTour });
+            }
+            else
+            {
+                TempData["Message"] = "Thêm thất bại";
+                return RedirectToAction("ChiTietTour", new { MaTour = ct.chiTietDiaDiem.MaTour });
+            }
+        }
+
+        [HttpGet]
+        public IActionResult XoaDiaDiem(string MaTour, string MaDiaDiem)
+        {
+            if (tourList.Count() == 0)
+            {
+                tourList = _tour.DanhSachTour();
+            }
+            foreach (Tour t in tourList)
+            {
+                if (t.MaTour.Equals(MaTour))
+                {
+                    _tour = new TourDAO(t);
+                    chiTietDiaDiems = _tour.DanhSachDiaDiem();
+
+                    foreach (ChiTietDiaDiem dd in chiTietDiaDiems)
+                    {
+                        if (dd.MaDiaDiem.Equals(MaDiaDiem))
+                        {
+                            if (_tour.XoaDiaDiem(dd))
+                            {
+                                TempData["Message"] = "Xoá thành công";
+                                return RedirectToAction("ChiTietTour", new { MaTour = dd.MaTour });
+                            }
+                            else
+                            {
+                                TempData["Message"] = "Xoá thất bại";
+                                return RedirectToAction("ChiTietTour", new { MaTour = dd.MaTour });
+                            }
+                        }
+                    }
+                }
+            }
+            return RedirectToAction("ChiTietTour", new { MaTour = MaTour });
+        }
+
     }
+
+
 }
