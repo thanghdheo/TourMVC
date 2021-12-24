@@ -11,7 +11,7 @@ using Tour_MVC.Models;
 
 namespace Tour_MVC
 {
-
+     
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -410,12 +410,12 @@ namespace Tour_MVC
         {
             if (_tour.SuaDiaDiem(Int16.Parse(ct.sttMoi), ct.chiTietDiaDiem))
             {
-                TempData["Message"] = "Thêm thành công";
+                TempData["Message"] = "Sửa thành công";
                 return RedirectToAction("ChiTietTour", new { MaTour = ct.chiTietDiaDiem.MaTour });
             }
             else
             {
-                TempData["Message"] = "Thêm thất bại";
+                TempData["Message"] = "Sửa thất bại";
                 return RedirectToAction("ChiTietTour", new { MaTour = ct.chiTietDiaDiem.MaTour });
             }
         }
